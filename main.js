@@ -141,13 +141,11 @@ function doTraining(){
 
 function startPredicting(){
 	isPredicting = true;
-	document.getElementById("prediction").innerText = "Predicting is starting...";
 	predict();
 }
 
 function stopPredicting(){
 	isPredicting = false;
-	document.getElementById("prediction").innerText = "Predicting is stopped";
 	predict();
 }
 

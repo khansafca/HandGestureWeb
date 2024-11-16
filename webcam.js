@@ -11,8 +11,6 @@ class Webcam {
      * Captures a frame from the webcam and normalizes it between -1 and 1.
      * Returns a batched image (1-element batch) of shape [1, w, h, c].
      */
-  
-  
     capture() {
       return tf.tidy(() => {
         // Reads the image as a Tensor from the webcam <video> element.
@@ -37,8 +35,6 @@ class Webcam {
      * Crops an image tensor so we get a square image with no white space.
      * @param {Tensor4D} img An input image Tensor to crop.
      */
-  
-  
     cropImage(img) {
       const size = Math.min(img.shape[0], img.shape[1]);
       const centerHeight = img.shape[0] / 2;
@@ -54,8 +50,6 @@ class Webcam {
      * @param {number} width The real width of the video element.
      * @param {number} height The real height of the video element.
      */
-  
-  
     adjustVideoSize(width, height) {
       const aspectRatio = width / height;
       if (width >= height) {
@@ -67,28 +61,31 @@ class Webcam {
   
     async setup() {
       return new Promise((resolve, reject) => {
-        navigator.getUserMedia = navigator.getUserMedia ||
-            navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
-            navigator.msGetUserMedia;
-        if (navigator.getUserMedia) {
-          navigator.getUserMedia(
-              {video: {width: 224, height: 224}},
-              stream => {
-                this.webcamElement.srcObject = stream;
-                this.webcamElement.addEventListener('loadeddata', async () => {
-                  this.adjustVideoSize(
-                      this.webcamElement.videoWidth,
-                      this.webcamElement.videoHeight);
-                  resolve();
-                }, false);
-              },
-              error => {
-                reject(error);
-              });
-        } else {
-          reject();
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          reject(new Error('Browser API navigator.mediaDevices.getUserMedia not available'));
+          return;
         }
+        
+        navigator.mediaDevices.getUserMedia({
+          video: {
+            width: 224,
+            height: 224,
+            facingMode: 'user'
+          }
+        })
+        .then(stream => {
+          this.webcamElement.srcObject = stream;
+          this.webcamElement.addEventListener('loadeddata', async () => {
+            this.adjustVideoSize(
+              this.webcamElement.videoWidth,
+              this.webcamElement.videoHeight
+            );
+            resolve();
+          }, false);
+        })
+        .catch(error => {
+          reject(error);
+        });
       });
     }
-  }
-  
+}

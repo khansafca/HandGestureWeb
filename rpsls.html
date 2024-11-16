@@ -1,0 +1,110 @@
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+<script src="webcam.js"></script>
+<script src="rps-dataset.js"></script>
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        color: white;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+    .container {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+    }
+    .webcam-container {
+        background: rgba(255,255,255,0.1);
+        padding: 10px;
+        border-radius: 10px;
+    }
+    .game-buttons button {
+        margin: 5px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .game-buttons button:hover {
+        transform: scale(1.1);
+    }
+    #0 { background-color: #ff6b6b; }
+    #1 { background-color: #4ecdc4; }
+    #2 { background-color: #45b7d1; }
+    #3 { background-color: #96ceb4; }
+    #4 { background-color: #ffeead; }
+    .samples {
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+    }
+    .control-buttons {
+        display: flex;
+        gap: 10px;
+        margin: 20px 0;
+    }
+    .control-buttons button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        background: #6c5ce7;
+        color: white;
+        cursor: pointer;
+    }
+    #dummy {
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 8px;
+        line-height: 1.5;
+        margin: 20px 0;
+    }
+    #prediction {
+        font-size: 24px;
+        text-align: center;
+        margin-top: 20px;
+        color: #a8e6cf;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="webcam-container">
+            <video autoplay playsinline muted id="wc" width="224" height="224"></video>
+        </div>
+        
+        <div class="game-buttons">
+            <button type="button" id="0" onclick="handleButton(this)">Rock</button>
+            <button type="button" id="1" onclick="handleButton(this)">Paper</button>
+            <button type="button" id="2" onclick="handleButton(this)">Scissors</button>
+            <button type="button" id="3" onclick="handleButton(this)">Spock</button>
+            <button type="button" id="4" onclick="handleButton(this)">Lizard</button>
+        </div>
+        
+        <div class="samples">
+            <div id="rocksamples">Rock Samples:</div>
+            <div id="papersamples">Paper Samples:</div>
+            <div id="scissorssamples">Scissors Samples:</div>
+            <div id="spocksamples">Spock Samples:</div>
+            <div id="lizardsamples">Lizard Samples:</div>
+        </div>
+    </div>
+
+    <div id="dummy">Once training is complete, click 'Start Predicting' to see predictions, and 'Stop Predicting' to end. Once you are happy with your model, click 'Download Model' to save the model to your local disk.</div>
+
+    <div class="control-buttons">
+        <button type="button" id="train" onclick="doTraining()">Train Network</button>
+        <button type="button" id="startPredicting" onclick="startPredicting()">Start Predicting</button>
+        <button type="button" id="stopPredicting" onclick="stopPredicting()">Stop Predicting</button>
+        <button type="button" id="saveModel" onclick="saveModel()">Download Model</button>
+    </div>
+
+    <div id="prediction"></div>
+</body>
+
+<script src="main.js"></script>
+</html>
